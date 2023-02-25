@@ -28,11 +28,16 @@ public class Program
 
         //0. write linq display every name ordered alphabetically
         var orderedPeople = people.OrderBy(person => person.FirstName).ToList();
-        orderedPeople.ForEach(person => Console.WriteLine(String.Format("{0} {1}", person.FirstName, person.LastName)));
+        foreach (var person in orderedPeople)
+        {
+            Console.WriteLine($"{person.FirstName} {person.LastName}");
+        }
+
 
         //1. write linq statement for the people with last name that starts with the letter D
-        var dPeople = people.Where(person => person.LastName.ToUpper().StartsWith("D"));
-        Console.WriteLine("Number of people who's last name starts with the letter D " + dPeople.Count());
+        var nameStartsWithD = people.Where(person => person.LastName.ToUpper().StartsWith("D"));
+        //var nameStartsWithD = people.Where(person => char.ToLower(person.LastName[0]).Equals('d'));
+        Console.WriteLine("Number of people who's last name starts with the letter D " + nameStartsWithD.Count());
 
 
         //2. write linq statement for all the people who are have the surname Thompson and Baker. Write all the first names to the console
@@ -96,10 +101,11 @@ public class Program
         }
         ).ToList();
 
-        peopleWithName.ForEach(person => Console.WriteLine("{0}", person.Name.NameAndTitle()));
+        peopleWithName.ForEach(person => Console.WriteLine(person.Name.NameAndTitle()));
 
 
-        // 10. Write a linq statement get all the families as a List<Family> class below. You will need to find all the members and group them by family (see question 5). Then create a family class for each family with the relevant details
+        // 10. Write a linq statement get all the families as a List<Family> class below. You will need to find all the members and group them by family (see question 5).
+        // Then create a family class for each family with the relevant details
         var fam = people
             .Where(person => people.Where(person2 => person.LastName.Equals(person2.LastName)).Count() > 1)
             .GroupBy(person => person.LastName)
@@ -107,93 +113,4 @@ public class Program
             .ToList();
             
     }
-}
-
-
-public class Person
-{
-    public Person(string firstName, string lastName, int age, bool isMale)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Age = age;
-        Male = isMale;
-    }
-
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public int Age { get; set; }
-    public bool Male { get; set; }
-
-    public override string ToString()
-    {
-        return string.Format("{0} {1} {2} {3}", FirstName, LastName, Age, Male);
-    }
-}
-
-public class SimplePerson
-{
-    public string Name { get; set; }
-    public int Age { get; set; }
-}
-
-public class PersonWithName
-{
-    public NameWithTitle Name { get; set; }
-    public int Age { get; set; }
-}
-
-public class NameWithTitle
-{
-    public NameWithTitle(string firstName, string lastName, bool isMale)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        IsMale = isMale;
-    }
-
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public bool IsMale { get; set; }
-
-    public string NameAndTitle()
-    {
-        var title = "Ms.";
-        if (IsMale)
-        {
-            title = "Mr.";
-        }
-        return $"{title} {FirstName} {LastName}";
-    }
-}
-
-public class Family
-{
-    public Family()
-    {
-        Members = new List<FamilyMember>();
-    }
-
-    public Family(string lastName, List<FamilyMember> members)
-    {
-        LastName = lastName;
-        Members = members;
-    }
-
-    public string LastName { get; set; }
-    List<FamilyMember> Members { get; set; }
-}
-
-public class FamilyMember
-{
-    public FamilyMember(string firstName, int age, bool isMale)
-    {
-        FirstName = firstName;
-        Age = age;
-        Male = isMale;
-    }
-
-    public string FirstName { get; set; }
-    public int Age { get; set; }
-    public bool Male { get; set; }
 }
